@@ -12,15 +12,22 @@
 makeCacheMatrix <- function(x = matrix()) {
         z<-matrix()
         
+        #Set function creation
         set<-function(y){
                 x<<-y
                 z<<-NULL
         }
-                
+        
+        #get function creation        
         get <- function() x
+        
+        #setinverse function creation
         setinverse <- function(inverse) z <<- inverse
+        
+        #getinverse function creation
         getinverse <- function() z
         
+        #setting a list of functions that will be returned
         list(set = set, get = get,
              setinverse = setinverse,
              getinverse = getinverse)
@@ -33,14 +40,26 @@ makeCacheMatrix <- function(x = matrix()) {
 ## as its input
 
 cacheSolve <- function(x, ...) {
+        #Getting the inverse if already created
         z<- x$getinverse()
         
+        #Checking to see if the inverse returned in the above step is
+        #not NA from initializing but actual inverse calculate from earlier
         if(!is.na(z[1,1])) {
                 message("getting cached data")
+                
+                # Returning the previously calculated/cached matrix inverse 
                 return(z)
         }
+        #get the matrix that needs to be inversed
         data <- x$get()
+        
+        #get the inverse of the matrix
         z <- solve(data, ...)
+        
+        #Cache the inverse after it has been calculated once
         x$setinverse(z)
+        
+        #this statement returns the inverse
         z
 }
